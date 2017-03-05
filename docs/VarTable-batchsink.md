@@ -11,6 +11,13 @@ NoSQL databases arose to address this limitation by allowing you to insert data 
 Because of this, you can easily make changes to an application without interruption. The result is more reliable
 code integration, faster development, and database administration time.
 
+## Plugin Configuration
+
+| Configuration | Required | Default | Description |
+| :------------ | :------: | :----- | :---------- |
+| **Table Name** | **Y** | N/A | Specifies the name of the Dataset to write. If the Dataset doesn't exist, then it will be created. If a macro is not specified, then it's created during deployment, else it's created at runtime. |
+| **Row Key** | **Y** | N/A | Specifies how unique key needs to be generated. This can be an expression. |
+
 ### Usage Notes
 
 In cases, where one does not know in advance the columns the table would have, this plugin is very useful. It uses pre-defined structure to provide dynamic schema capabilities.
@@ -162,8 +169,7 @@ Would generate row key as
   name:2.8:1
 ```
 
-## Configuration
-
 ## Additional Notes
 
+Upon creating the CDAP table using this plugin, you can either use Apache Phoenix or Hive with HBase Storage handler to create a view over different schemas that are available in the same table. 
 
