@@ -34,6 +34,7 @@
     <hadoop.version>2.3.0</hadoop.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <hydrator.version>1.6.0</hydrator.version>
+    <commons-jexl.version>3.0</commons-jexl.version>
     <junit.version>4.11</junit.version>
     <widgets.dir>widgets</widgets.dir>
     <docs.dir>docs</docs.dir>
@@ -210,6 +211,11 @@
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-jexl3</artifactId>
+      <version>${commons-jexl.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -235,7 +241,7 @@
               <Embed-Transitive>true</Embed-Transitive>
               <Embed-Directory>lib</Embed-Directory>
               <!--Only @Plugin classes in the export packages will be included as plugin-->
-              <_exportcontents>co.cask.*</_exportcontents>
+              <_exportcontents>co.cask.wrangler.*</_exportcontents>
             </instructions>
           </configuration>
           <executions>
@@ -280,7 +286,9 @@
                   var config = {
                     "parents": [
                       "system:cdap-data-pipeline" + etlRange,
-                      "system:cdap-data-streams" + etlRange
+                      "system:cdap-data-streams" + etlRange,
+                      "system:cdap-etl-batch" + etlRange,
+                      "system:cdap-etl-realtime" + etlRange
                     ],
                     "properties": {}
                   }
@@ -356,7 +364,7 @@
     </plugins>
   </build>
 
-   <!-- Profile for release. Includes signing of jars. -->
+  <!-- Profile for release. Includes signing of jars. -->
   <profiles>
     <profile>
       <id>release</id>
