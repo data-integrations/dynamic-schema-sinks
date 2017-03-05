@@ -23,8 +23,8 @@ When it's written to then table, 'ssn', 'name', 'address', 'zipcode' and 'salary
 
 This plugin supports writing dynamic schema using array of records. There are two types of records supported
 
-  1. Record that has two fields, namely 'field' and 'value' and 
-  2. Record that has three field, namely 'field', 'value' and 'type'. 
+  1. Record that has two fields, namely **'field'** and **'value'** and 
+  2. Record that has three field, namely **'field'**, **'value'** and **'type'**. 
   
 In order for the dynamic schema to work, the field names within the record of an array have to be fixed. They can only be 
 'field', 'value' or 'type'. 
