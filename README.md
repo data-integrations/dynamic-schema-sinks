@@ -2,6 +2,9 @@
 
 This repository contains HBase and CDAP Table Dataset sink with support for writing dynamic schema records. 
 
+* [HBase Sink](docs/VarTable-batchsink.md)
+* [CDAP Table Dataset Sink](docs/VarHBase-batchsink.md)
+
 ## Defining Dynamic Schema
 
 In order to define dynamic schemas, one has to use **'Map'** or **'Array'** field types in the record to define the variability of fields to be written to Table dataset. 
