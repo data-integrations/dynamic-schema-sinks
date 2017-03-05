@@ -15,10 +15,72 @@ code integration, faster development, and database administration time.
 
 In cases, where one does not know in advance the columns the table would have, this plugin is very useful. It uses pre-defined structure to provide dynamic schema capabilities.
  
-In order to define dynamic schemas, one has to use **'Map'** or **'Array'** field types in the record to define the variability.
- 
-
 #### Defining Dynamic Schema
+
+In order to define dynamic schemas, one has to use **'Map'** or **'Array'** field types in the record to define the variability of fields to be written to Table dataset. 
+
+##### Map
+
+When using map, the key field is considered to be the column name and the value field is considered as the value for the column. Both are of type string. So, when value is written, it's written as string. So let's say you have a map as follows
+
+```
+  { "ssn" : "000-00-0000", "dynamic" : { "name" : "joltie", "address" : "mars ave", "zipcode" : "3423424", "salary":"10.9" } }
+```
+
+When it's written to then table, 'ssn', 'name', 'address', 'zipcode' and 'salary' as used as qualifier (column names) and their values will be respectively '000-00-0000', 'joltie', 'mars ave', '3423424' and '10.9'.
+
+##### Array
+
+This plugin supports writing dynamic schema using array of records. There are two types of records supported
+
+  1. Record that has two fields, namely 'field' and 'value' and 
+  2. Record that has three field, namely 'field', 'value' and 'type'. 
+  
+In order for the dynamic schema to work, the field names within the record of an array have to be fixed. They can only be 
+'field', 'value' or 'type'. 
+
+When the record is specified as type (1), then both are of type string and they would be written as string. Let's assume a record:
+
+```
+ { 
+   "ssn" : "000-00-0000", 
+   "dynamic" : [ 
+     { "field" : "name", "value" : "joltie" },
+     { "field" : "address", "value" : "mars ave" },
+     { "field" : "zipcode", "value" : "3423424},
+     { "field" : "salary", "value" : "10.9"  
+   ]
+ }   
+```
+would generate the same result as the 'Map' based dynamic schema would generate.
+
+> Note that value is written as string. 
+
+But, when the record is specified as type (2), the major difference is that the values are written based on the 'type' specified. So, let's look at an example: 
+
+```
+ { 
+   "ssn" : "000-00-0000", 
+   "dynamic" : [ 
+     { "field" : "name", "value" : "joltie", "type" : "string" },
+     { "field" : "address", "value" : "mars ave", "type" : "string"},
+     { "field" : "zipcode", "value" : "3423424", "type" : "long"},
+     { "field" : "salary", "value" : "10.9", "type" : "double" }
+   ]
+ }   
+```
+
+In this case, the cell values are serialized as the type they are specified in the 'type' field.
+
+Following are the types supported:
+
+* string,
+* int,
+* long,
+* short,
+* double,
+* float, 
+* boolean
 
 #### Row Key Expression
 
@@ -68,7 +130,7 @@ A slightly complex expression can include operations as follows:
   ssn + (age % 10)
 ```
 
-#### Column Family
+#### Column Family Expression
 
 Similar to Row Key expression, the column family expression supports the same capabilities with addition of being able
 to specify the column family name as constant.
