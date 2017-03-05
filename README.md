@@ -7,7 +7,7 @@ This repository contains HBase and CDAP Table Dataset sink with support for writ
 
 ## Defining Dynamic Schema
 
-In order to define dynamic schemas, one has to use **'Map'** or **'Array'** field types in the record to define the variability of fields to be written to Table dataset. 
+In order to define dynamic schemas, one has to use **'Map'** or **'Array'** field types in the record to define the variability of fields to be written to Table dataset or HBase Table. 
 
 ### Map
 
