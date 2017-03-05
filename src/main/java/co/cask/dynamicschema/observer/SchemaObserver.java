@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.dynamicschema;
+package co.cask.dynamicschema.observer;
 
 import co.cask.dynamicschema.api.Observer;
 import co.cask.dynamicschema.api.SchemaVisitor;
@@ -31,10 +31,10 @@ public final class SchemaObserver implements Observer<Schema> {
   }
 
   public void traverse(Schema schema) {
-    observe(schema, 0);
+    traverse(schema, 0);
   }
 
-  private void observe(Schema schema, int depth) {
+  private void traverse(Schema schema, int depth) {
     for (Schema.Field field : schema.getFields()) {
       Schema.Type type;
       if (!field.getSchema().isNullable()) {

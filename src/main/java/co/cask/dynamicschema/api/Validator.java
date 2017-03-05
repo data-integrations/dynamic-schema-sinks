@@ -17,8 +17,12 @@
 package co.cask.dynamicschema.api;
 
 /**
- * Created by nitin on 3/4/17.
+ * Generic interface for validating object.
  */
 public interface Validator {
-  public boolean validate() throws ValidationException;
+  /**
+   * Applies validation on the object.
+   * @throws ValidationException throw if there are validation errors.
+   */
+  public void validate() throws ValidationException;
 }

@@ -16,27 +16,24 @@
 
 package co.cask.dynamicschema;
 
-import co.cask.dynamicschema.api.FieldVisitor;
-import co.cask.dynamicschema.api.Getable;
-import co.cask.dynamicschema.api.GetableException;
+import co.cask.cdap.api.common.Bytes;
 import co.cask.cdap.api.data.format.StructuredRecord;
 import co.cask.cdap.api.data.schema.Schema;
-import org.apache.hadoop.hbase.client.Durability;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.util.Bytes;
+import co.cask.cdap.api.dataset.table.Put;
+import co.cask.dynamicschema.api.Getable;
+import co.cask.dynamicschema.api.GetableException;
+import co.cask.dynamicschema.api.StructuredRecordVisitor;
 
 import java.util.Map;
 
-public class DynamicSchemaHBasePut implements FieldVisitor, Getable<Put> {
-  private byte[] row;
-  private byte[] family;
+/**
+ *
+ */
+public class TablePutGenerator implements StructuredRecordVisitor, Getable<Put> {
   private final Put put;
 
-  public DynamicSchemaHBasePut(byte[] row, byte[] family, Durability durability) {
-    this.row = row;
-    this.family = family;
-    this.put = new Put(this.row);
-    this.put.setDurability(durability);
+  public TablePutGenerator(byte[] rowkey) {
+    put = new Put(rowkey);
   }
 
   public boolean visit(int depth, String name, Schema.Field field, StructuredRecord value) {
@@ -46,61 +43,61 @@ public class DynamicSchemaHBasePut implements FieldVisitor, Getable<Put> {
       if (size  == 2) {
         String fld = value.get("field");
         String val = value.get("value");
-        put.add(family, Bytes.toBytes(fld), Bytes.toBytes(val));
+        put.add(fld, val);
       } else {
         String fld = value.get("field");
         String val = value.get("value");
         String type = value.get("type");
-        put.add(family, Bytes.toBytes(fld), Bytes.toBytes(val));
+        put.add(fld, val);
       }
     }
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, String value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+    put.add(name, Bytes.toBytes(value));
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, Integer value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+    put.add(name, Bytes.toBytes(value));
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, Float value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+    put.add(name, Bytes.toBytes(value));
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, Double value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+    put.add(name, Bytes.toBytes(value));
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, Boolean value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+    put.add(name, Bytes.toBytes(value));
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, Long value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+    put.add(name, Bytes.toBytes(value));
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, Map<String, String> value) {
     for (Map.Entry<String, String> entry : value.entrySet()) {
-      put.add(family, Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+      put.add(entry.getKey(), Bytes.toBytes(entry.getValue()));
     }
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field, byte[] value) {
-    put.add(family, Bytes.toBytes(name), value);
+    put.add(name, value);
     return true;
   }
 
   public boolean visit(int depth, String name, Schema.Field field) {
-    put.add(family, Bytes.toBytes(name), (byte[]) null);
+    put.add(name, (byte[]) null);
     return true;
   }
 

@@ -17,8 +17,12 @@
 package co.cask.dynamicschema.api;
 
 /**
- * Created by nitin on 3/4/17.
+ * Observer interface for traversing complex object.
  */
 public interface Observer<T> {
+  /**
+   * Traverses the whole object tree.
+   * @param value defines the type of the object.
+   */
   void traverse(T value);
 }

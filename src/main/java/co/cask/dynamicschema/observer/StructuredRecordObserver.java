@@ -14,9 +14,9 @@
  * the License.
  */
 
-package co.cask.dynamicschema;
+package co.cask.dynamicschema.observer;
 
-import co.cask.dynamicschema.api.FieldVisitor;
+import co.cask.dynamicschema.api.StructuredRecordVisitor;
 import co.cask.dynamicschema.api.Observer;
 import co.cask.cdap.api.data.format.StructuredRecord;
 import co.cask.cdap.api.data.schema.Schema;
@@ -30,17 +30,17 @@ import java.util.Map;
  * Structured Record Observer.
  */
 public final class StructuredRecordObserver implements Observer<StructuredRecord> {
-  private final FieldVisitor visitor;
+  private final StructuredRecordVisitor visitor;
 
-  public StructuredRecordObserver(FieldVisitor visitor) {
+  public StructuredRecordObserver(StructuredRecordVisitor visitor) {
     this.visitor = visitor;
   }
 
   public void traverse(StructuredRecord record) {
-    observe(record, 0);
+    traverse(record, 0);
   }
 
-  private void observe(StructuredRecord record, int depth) {
+  private void traverse(StructuredRecord record, int depth) {
     if (!visitor.visit(depth, record.getSchema().getRecordName(), null, record)) {
       return;
     }

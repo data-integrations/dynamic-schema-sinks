@@ -4,6 +4,9 @@ import co.cask.cdap.api.common.Bytes;
 import co.cask.cdap.api.data.format.StructuredRecord;
 import co.cask.cdap.api.data.schema.Schema;
 import co.cask.cdap.internal.io.ReflectionSchemaGenerator;
+import co.cask.dynamicschema.api.ValidationException;
+import co.cask.dynamicschema.observer.SchemaObserver;
+import co.cask.dynamicschema.observer.StructuredRecordObserver;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.client.Put;
 import org.junit.Assert;
@@ -15,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Tests {@link DynamicSchemaHBaseSink}
+ * Tests {@link VariableSchemaHBaseSink}
  */
-public class DynamicSchemaHBaseSinkTest {
+public class VariableSchemaHBaseSinkTest {
 
   public final class GoodDynamicSchema {
     private String field;
@@ -111,15 +114,21 @@ public class DynamicSchemaHBaseSinkTest {
     DynamicSchemaValidator dsc = new DynamicSchemaValidator();
     SchemaObserver so = new SchemaObserver(dsc);
     so.traverse(schema);
-    boolean status = dsc.validate();
-    Assert.assertTrue(status);
+    dsc.validate();
 
-    byte[] row = Bytes.toBytes("A");
+    byte[] key = Bytes.toBytes("A");
     byte[] family = Bytes.toBytes("B");
-    DynamicSchemaHBasePut sp = new DynamicSchemaHBasePut(row, family, Durability.SYNC_WAL);
+    HBasePutGenerator sp = new HBasePutGenerator(key, family, Durability.SYNC_WAL);
     StructuredRecordObserver walker = new StructuredRecordObserver(sp);
     walker.traverse(record);
     Put p = sp.get();
+    Assert.assertNotNull(p);
+
+    TablePutGenerator tablePutGenerator = new TablePutGenerator(key);
+    StructuredRecordObserver observer = new StructuredRecordObserver(tablePutGenerator);
+    observer.traverse(record);
+    co.cask.cdap.api.dataset.table.Put put = tablePutGenerator.get();
+    Assert.assertNotNull(put);
 
     Assert.assertTrue(1==1);
   }
@@ -130,29 +139,39 @@ public class DynamicSchemaHBaseSinkTest {
     DynamicSchemaValidator dcv = new DynamicSchemaValidator();
     SchemaObserver so = new SchemaObserver(dcv);
     so.traverse(new ReflectionSchemaGenerator().generate(GoodRecord.class, true));
-    Assert.assertTrue(dcv.validate());
+    dcv.validate();
 
     so.traverse(new ReflectionSchemaGenerator().generate(GoodRecord1.class, true));
-    Assert.assertTrue(dcv.validate());
+    dcv.validate();
   }
 
-  @Test
-  public void testBadDynamicSchemas() throws Exception {
+  @Test(expected = ValidationException.class)
+  public void testBadDynamic1Schemas() throws Exception {
     // Test All bad Schema types for dynamic schema.
     DynamicSchemaValidator dcv = new DynamicSchemaValidator();
     SchemaObserver so = new SchemaObserver(dcv);
 
     so.traverse(new ReflectionSchemaGenerator().generate(BadRecord1.class, true));
-    Assert.assertFalse(dcv.validate());
-
-    so.traverse(new ReflectionSchemaGenerator().generate(BadRecord2.class, true));
-    Assert.assertFalse(dcv.validate());
-
-    so.traverse(new ReflectionSchemaGenerator().generate(BadRecord3.class, true));
-    Assert.assertFalse(dcv.validate());
+    dcv.validate();
   }
 
+  @Test(expected = ValidationException.class)
+  public void testBadDynamic2Schemas() throws Exception {
+    // Test All bad Schema types for dynamic schema.
+    DynamicSchemaValidator dcv = new DynamicSchemaValidator();
+    SchemaObserver so = new SchemaObserver(dcv);
 
+    so.traverse(new ReflectionSchemaGenerator().generate(BadRecord2.class, true));
+    dcv.validate();
+  }
 
+  @Test(expected = ValidationException.class)
+  public void testBadDynamic3Schemas() throws Exception {
+    // Test All bad Schema types for dynamic schema.
+    DynamicSchemaValidator dcv = new DynamicSchemaValidator();
+    SchemaObserver so = new SchemaObserver(dcv);
 
+    so.traverse(new ReflectionSchemaGenerator().generate(BadRecord3.class, true));
+    dcv.validate();
+  }
 }

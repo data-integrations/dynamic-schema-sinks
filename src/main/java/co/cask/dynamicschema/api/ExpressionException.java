@@ -18,8 +18,8 @@ package co.cask.dynamicschema.api;
 /**
  * Exception throw when there is issue resolving the key expression.
  */
-public class KeyResolverException extends Exception {
-  public KeyResolverException(String message) {
+public class ExpressionException extends Exception {
+  public ExpressionException(String message) {
     super(message);
   }
 }

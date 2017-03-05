@@ -17,7 +17,7 @@
 package co.cask.dynamicschema.api;
 
 /**
- * Created by nitin on 3/4/17.
+ * Exception thrown when the validator has issues validating the object.
  */
 public class ValidationException extends Exception {
   public ValidationException(String message) {

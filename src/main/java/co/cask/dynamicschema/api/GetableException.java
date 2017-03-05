@@ -17,7 +17,7 @@
 package co.cask.dynamicschema.api;
 
 /**
- * Created by nitin on 3/4/17.
+ * Thrown when there is error getting value.
  */
 public class GetableException extends Exception {
   public GetableException(String message) {

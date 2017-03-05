@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Field Visitor Interface for {@link StructuredRecord}.
  */
-public interface FieldVisitor {
+public interface StructuredRecordVisitor {
   /**
    * Visits all fields that are of {@link StructuredRecord} type.
    *

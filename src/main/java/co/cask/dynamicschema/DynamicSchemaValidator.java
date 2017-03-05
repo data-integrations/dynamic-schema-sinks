@@ -11,6 +11,11 @@ public class DynamicSchemaValidator extends AbstractSchemaVisitor implements Val
   private boolean valid;
   private String message;
 
+  public DynamicSchemaValidator() {
+    valid = true;
+    message = "OK";
+  }
+
   @Override
   public boolean visitArray(int i, String name, Schema.Field field) {
     valid = true;
@@ -53,11 +58,10 @@ public class DynamicSchemaValidator extends AbstractSchemaVisitor implements Val
     return true;
   }
 
-  public boolean validate() throws ValidationException {
+  public void validate() throws ValidationException {
     if (!valid) {
       throw new ValidationException(message);
     }
-    return valid;
   }
 
 }

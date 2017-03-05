@@ -15,8 +15,8 @@
         {
           "widget-type": "textbox",
           "label": "Table Name",
-          "name": "name",
-          "description": "Name of the HBase table",
+          "name": "table",
+          "description": "Name of the HBase table to write to",
           "widget-attributes" : {
             "default" : "mytable"
           }
@@ -33,10 +33,12 @@
         {
           "widget-type": "textbox",
           "label": "Row key (input field name or expression)",
-          "name": "rowkey",
-          "widget-attributes" : {
-            "default" : "field name or expression"
-          }
+          "name": "rowkey"
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Column Family (input field or expression or constant)",
+          "name": "family"
         }
       ]
     },
@@ -44,8 +46,24 @@
       "label": "HBase Advanced Options",
       "properties" : [
         {
+          "widget-type": "textbox",
+          "label": "Zooekeeper Port (DEFAULT: 2181)",
+          "name": "port",
+          "widget-attributes" : {
+            "default" : "2181"
+          }
+        },
+        {
+          "widget-type" : "textbox",
+          "label" : "Parent Node of HBase in Zookeeper. (DEFAULT : /hbase)",
+          "name" : "path",
+          "widget-attributes" : {
+            "default" : "/hbase"
+          }
+        },
+        {
           "widget-type": "select",
-          "label": "Row Level Durability",
+          "label": "Row Level Durability (DEFAULT: WAL Synchronous)",
           "name": "durability",
           "widget-attributes" : {
             "values" : [
@@ -62,7 +80,7 @@
   ],
   "jump-config": {
     "datasets": [{
-      "ref-property-name": "name"
+      "ref-property-name": "table"
     }]
   }
 }

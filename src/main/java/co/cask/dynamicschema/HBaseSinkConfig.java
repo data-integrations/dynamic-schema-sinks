@@ -17,46 +17,66 @@
 package co.cask.dynamicschema;
 
 import co.cask.cdap.api.annotation.Description;
+import co.cask.cdap.api.annotation.Macro;
 import co.cask.cdap.api.annotation.Name;
 import co.cask.hydrator.common.ReferencePluginConfig;
+import org.apache.hadoop.hbase.client.Durability;
 
 import javax.annotation.Nullable;
 
 /**
- * HBaseSink plugin.
+ * HBase Sink plugin configuration.
  */
 public class HBaseSinkConfig extends ReferencePluginConfig {
   @Name("table")
   @Description("Name of table")
-  public String name;
+  @Macro
+  public String table;
 
   @Name("rowkey")
   @Description("Expression to specify row key")
+  @Macro
   public String rowkey;
+
+  @Name("family")
+  @Description("Column Family")
+  @Macro
+  public String family;
 
   @Name("qorum")
   @Description("Zookeeper Server Qorum. e.g. <hostname>[[:port]:path]")
   @Nullable
+  @Macro
   public String qorum;
 
   @Name("port")
   @Description("Client port")
   @Nullable
+  @Macro
   public String port;
 
   @Name("durability")
   @Description("Durability of writes")
   @Nullable
+  @Macro
   public String durability;
 
-  public HBaseSinkConfig(String referenceName, String name, String rowkey, String qorum,
-                         String port, String durability) {
+  @Name("path")
+  @Description("Parent node of HBase in Zookeeper")
+  @Nullable
+  @Macro
+  public String path;
+
+  public HBaseSinkConfig(String referenceName, String table, String rowkey, String family, String qorum,
+                         String port, String durability, String path) {
     super(referenceName);
-    this.name = name;
+    this.table = table;
     this.rowkey = rowkey;
+    this.family = family;
     this.qorum = qorum;
     this.port = port;
     this.durability = durability;
+    this.path = path;
   }
 
   public int getClientPort() {
@@ -65,5 +85,19 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
     } catch (NumberFormatException e) {
       return 2181;
     }
+  }
+
+
+  public Durability getDurability() {
+    if (durability.equalsIgnoreCase("wal ssynchronous")) {
+      return Durability.ASYNC_WAL;
+    } else if (durability.equalsIgnoreCase("wal asynchronous & force disk write")) {
+      return Durability.FSYNC_WAL;
+    } else if (durability.equalsIgnoreCase("skip wal")) {
+      return Durability.SKIP_WAL;
+    } else if (durability.equalsIgnoreCase("wal synchronous")) {
+      return Durability.SYNC_WAL;
+    }
+    return Durability.SYNC_WAL;
   }
 }
