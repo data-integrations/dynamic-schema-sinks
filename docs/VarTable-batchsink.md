@@ -18,15 +18,15 @@ code integration, faster development, and database administration time.
 | **Table Name** | **Y** | N/A | Specifies the name of the Dataset to write. If the Dataset doesn't exist, then it will be created. If a macro is not specified, then it's created during deployment, else it's created at runtime. |
 | **Row Key** | **Y** | N/A | Specifies how unique key needs to be generated. This can be an expression. |
 
-### Usage Notes
+## Usage Notes
 
 In cases, where one does not know in advance the columns the table would have, this plugin is very useful. It uses pre-defined structure to provide dynamic schema capabilities.
  
-#### Defining Dynamic Schema
+### Defining Dynamic Schema
 
 In order to define dynamic schemas, one has to use **'Map'** or **'Array'** field types in the record to define the variability of fields to be written to Table dataset. 
 
-##### Map
+#### Map
 
 When using map, the key field is considered to be the column name and the value field is considered as the value for the column. Both are of type string. So, when value is written, it's written as string. So let's say you have a map as follows
 
@@ -36,7 +36,7 @@ When using map, the key field is considered to be the column name and the value 
 
 When it's written to then table, 'ssn', 'name', 'address', 'zipcode' and 'salary' as used as qualifier (column names) and their values will be respectively '000-00-0000', 'joltie', 'mars ave', '3423424' and '10.9'.
 
-##### Array
+#### Array
 
 This plugin supports writing dynamic schema using array of records. There are two types of records supported
 
@@ -89,7 +89,7 @@ Following are the types supported:
 * float, 
 * boolean
 
-#### Row Key Expression
+### Row Key Expression
 
 Row key generation supports expression for creating row key. The expression can simple or complex.
 
@@ -137,7 +137,7 @@ A slightly complex expression can include operations as follows:
   ssn + (age % 10)
 ```
 
-#### Column Family Expression
+### Column Family Expression
 
 Similar to Row Key expression, the column family expression supports the same capabilities with addition of being able
 to specify the column family name as constant.
