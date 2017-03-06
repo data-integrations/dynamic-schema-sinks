@@ -43,6 +43,13 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
   @Macro
   public String family;
 
+
+  @Name("namespace")
+  @Description("Namespace to be used")
+  @Nullable
+  @Macro
+  public String namespace;
+
   @Name("qorum")
   @Description("Zookeeper Server Qorum. e.g. <hostname>[[:port]:path]")
   @Nullable

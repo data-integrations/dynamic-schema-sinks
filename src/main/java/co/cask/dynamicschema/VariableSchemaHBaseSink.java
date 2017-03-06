@@ -129,23 +129,23 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
       }
     }
 
+    // We kow check if all the variables in the expression are present in the input schema
+    // and they are of simple types.
+    variables = rowKeyExpression.getVariables();
+
+    // If there are no variables, then row key is not correctly formed by the user.
+    if (variables.size() == 0) {
+      throw new IllegalArgumentException(
+        String.format("Please specify a input field name or an expression. You cannot use a constant for the row key.")
+      );
+    }
+
     // Compile Column Family expression and make sure it's ok.
     // Compile Row Key Expression and make sure it's ok.
     try {
       familyExpression = new Expression(config.family);
     } catch (ExpressionException e) {
       throw new IllegalArgumentException("Error in specifying column family " + e.getMessage());
-    }
-
-    // We kow check if all the variables in the expression are present in the input schema
-    // and they are of simple types.
-    variables = familyExpression.getVariables();
-
-    // If there are no variables, then row key is not correctly formed by the user.
-    if (variables.size() == 0) {
-      throw new IllegalArgumentException(
-        String.format("Please specify a input field name or an expression. You cannot use a constant for row key.")
-      );
     }
 
     for (String variable : variables) {

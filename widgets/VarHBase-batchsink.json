@@ -16,7 +16,7 @@
           "widget-type": "textbox",
           "label": "Table Name",
           "name": "table",
-          "description": "Name of the HBase table to write to",
+          "description": "Name of the HBase table to write to. (namespace:name if writing to namespace table) ",
           "widget-attributes" : {
             "default" : "mytable"
           }
