@@ -30,7 +30,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitInt(int depth, String name, Schema.Field field);
+  boolean visitInt(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type FLOAT.
@@ -40,7 +40,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitFloat(int depth, String name, Schema.Field field);
+  boolean visitFloat(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type DOUBLE.
@@ -50,7 +50,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitDouble(int depth, String name, Schema.Field field);
+  boolean visitDouble(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type LONG.
@@ -60,7 +60,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitLong(int depth, String name, Schema.Field field);
+  boolean visitLong(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type BOOLEAN.
@@ -70,7 +70,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitBoolean(int depth, String name, Schema.Field field);
+  boolean visitBoolean(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type STRING.
@@ -80,7 +80,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitString(int depth, String name, Schema.Field field);
+  boolean visitString(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type BYTES.
@@ -90,7 +90,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitBytes(int depth, String name, Schema.Field field);
+  boolean visitBytes(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type NULL.
@@ -100,7 +100,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitNull(int depth, String name, Schema.Field field);
+  boolean visitNull(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type MAP.
@@ -110,7 +110,7 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitMap(int depth, String name, Schema.Field field);
+  boolean visitMap(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type ARRAY.
@@ -120,5 +120,5 @@ public interface SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  boolean visitArray(int depth, String name, Schema.Field field);
+  boolean visitArray(int depth, String name, Schema.Field field) throws VisitorException;
 }

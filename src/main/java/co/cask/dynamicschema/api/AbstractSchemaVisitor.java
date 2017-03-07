@@ -31,7 +31,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitInt(int depth, String name, Schema.Field field) {
+  public boolean visitInt(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -43,7 +43,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitFloat(int depth, String name, Schema.Field field) {
+  public boolean visitFloat(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -55,7 +55,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitDouble(int depth, String name, Schema.Field field) {
+  public boolean visitDouble(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -67,7 +67,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitLong(int depth, String name, Schema.Field field) {
+  public boolean visitLong(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -79,7 +79,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitBoolean(int depth, String name, Schema.Field field) {
+  public boolean visitBoolean(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -91,7 +91,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitString(int depth, String name, Schema.Field field) {
+  public boolean visitString(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -103,7 +103,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitBytes(int depth, String name, Schema.Field field) {
+  public boolean visitBytes(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -115,7 +115,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitNull(int depth, String name, Schema.Field field) {
+  public boolean visitNull(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -127,7 +127,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitMap(int depth, String name, Schema.Field field) {
+  public boolean visitMap(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 
@@ -139,7 +139,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitArray(int depth, String name, Schema.Field field) {
+  public boolean visitArray(int depth, String name, Schema.Field field) throws VisitorException {
     return true;
   }
 }

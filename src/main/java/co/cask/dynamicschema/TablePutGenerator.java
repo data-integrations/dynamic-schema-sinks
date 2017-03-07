@@ -23,11 +23,12 @@ import co.cask.cdap.api.dataset.table.Put;
 import co.cask.dynamicschema.api.Getable;
 import co.cask.dynamicschema.api.GetableException;
 import co.cask.dynamicschema.api.StructuredRecordVisitor;
+import co.cask.dynamicschema.api.VisitorException;
 
 import java.util.Map;
 
 /**
- *
+ * Generate CDAP Table puts.
  */
 public class TablePutGenerator implements StructuredRecordVisitor, Getable<Put> {
   private final Put put;
@@ -54,49 +55,49 @@ public class TablePutGenerator implements StructuredRecordVisitor, Getable<Put> 
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, String value) {
+  public boolean visit(int depth, String name, Schema.Field field, String value) throws VisitorException {
     put.add(name, Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Integer value) {
+  public boolean visit(int depth, String name, Schema.Field field, Integer value) throws VisitorException {
     put.add(name, Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Float value) {
+  public boolean visit(int depth, String name, Schema.Field field, Float value) throws VisitorException {
     put.add(name, Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Double value) {
+  public boolean visit(int depth, String name, Schema.Field field, Double value) throws VisitorException {
     put.add(name, Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Boolean value) {
+  public boolean visit(int depth, String name, Schema.Field field, Boolean value) throws VisitorException {
     put.add(name, Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Long value) {
+  public boolean visit(int depth, String name, Schema.Field field, Long value) throws VisitorException {
     put.add(name, Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Map<String, String> value) {
+  public boolean visit(int depth, String name, Schema.Field field, Map<String, String> value) throws VisitorException {
     for (Map.Entry<String, String> entry : value.entrySet()) {
       put.add(entry.getKey(), Bytes.toBytes(entry.getValue()));
     }
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, byte[] value) {
+  public boolean visit(int depth, String name, Schema.Field field, byte[] value) throws VisitorException {
     put.add(name, value);
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field) {
+  public boolean visit(int depth, String name, Schema.Field field) throws VisitorException {
     put.add(name, (byte[]) null);
     return true;
   }

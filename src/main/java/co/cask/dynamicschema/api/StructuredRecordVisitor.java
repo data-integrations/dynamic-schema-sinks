@@ -34,7 +34,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, StructuredRecord value);
+  boolean visit(int depth, String name, Schema.Field field, StructuredRecord value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link String} type.
@@ -45,7 +45,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, String value);
+  boolean visit(int depth, String name, Schema.Field field, String value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link Integer} type.
@@ -56,7 +56,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, Integer value);
+  boolean visit(int depth, String name, Schema.Field field, Integer value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link Float} type.
@@ -67,7 +67,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, Float value);
+  boolean visit(int depth, String name, Schema.Field field, Float value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link Double} type.
@@ -78,7 +78,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, Double value);
+  boolean visit(int depth, String name, Schema.Field field, Double value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link Boolean} type.
@@ -89,7 +89,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, Boolean value);
+  boolean visit(int depth, String name, Schema.Field field, Boolean value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link Long} type.
@@ -100,7 +100,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, Long value);
+  boolean visit(int depth, String name, Schema.Field field, Long value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link Map} type.
@@ -111,7 +111,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, Map<String, String> value);
+  boolean visit(int depth, String name, Schema.Field field, Map<String, String> value) throws VisitorException;
 
   /**
    * Visits all fields that are of {@link byte[]} type.
@@ -122,7 +122,7 @@ public interface StructuredRecordVisitor {
    * @param value value extracted from {@link StructuredRecord} for that named field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field, byte[] value);
+  boolean visit(int depth, String name, Schema.Field field, byte[] value) throws VisitorException;
 
   /**
    * Visits all fields that are of 'null' type.
@@ -132,5 +132,5 @@ public interface StructuredRecordVisitor {
    * @param field {@link Schema.Field} of the field.
    * @return true to continue, false to terminate visiting further.
    */
-  boolean visit(int depth, String name, Schema.Field field);
+  boolean visit(int depth, String name, Schema.Field field) throws VisitorException;
 }

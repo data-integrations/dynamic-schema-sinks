@@ -16,10 +16,12 @@
 
 package co.cask.dynamicschema.observer;
 
-import co.cask.dynamicschema.api.StructuredRecordVisitor;
-import co.cask.dynamicschema.api.Observer;
 import co.cask.cdap.api.data.format.StructuredRecord;
 import co.cask.cdap.api.data.schema.Schema;
+import co.cask.dynamicschema.api.Observer;
+import co.cask.dynamicschema.api.ObserverException;
+import co.cask.dynamicschema.api.StructuredRecordVisitor;
+import co.cask.dynamicschema.api.VisitorException;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.nio.ByteBuffer;
@@ -36,99 +38,105 @@ public final class StructuredRecordObserver implements Observer<StructuredRecord
     this.visitor = visitor;
   }
 
-  public void traverse(StructuredRecord record) {
+  public void traverse(StructuredRecord record) throws ObserverException {
     traverse(record, 0);
   }
 
-  private void traverse(StructuredRecord record, int depth) {
-    if (!visitor.visit(depth, record.getSchema().getRecordName(), null, record)) {
-      return;
-    }
-    for (Schema.Field field : record.getSchema().getFields()) {
-      Schema.Type type;
-      if (!field.getSchema().isNullable()) {
-        type = field.getSchema().getType();
-      } else {
-        type = field.getSchema().getNonNullable().getType();
+  private void traverse(StructuredRecord record, int depth) throws ObserverException {
+    try {
+      if (!visitor.visit(depth, record.getSchema().getRecordName(), null, record)) {
+        return;
       }
-      String name = field.getName();
 
-      boolean exit = false;
-      switch(type) {
-        case INT:
-          if(!visitor.visit(depth, name, field, (Integer) record.get(name))) {
-            exit = true;
-          }
-          break;
+      for (Schema.Field field : record.getSchema().getFields()) {
+        Schema.Type type;
+        if (!field.getSchema().isNullable()) {
+          type = field.getSchema().getType();
+        } else {
+          type = field.getSchema().getNonNullable().getType();
+        }
 
-        case FLOAT:
-          if(!visitor.visit(depth, name, field, (Float) record.get(name))) {
-            exit = true;
-          }
-          break;
+        String name = field.getName();
 
-        case DOUBLE:
-          if(!visitor.visit(depth, name, field, (Double) record.get(name))) {
-            exit = true;
-          }
-          break;
-
-        case LONG:
-          if(!visitor.visit(depth, name, field, (Long) record.get(name))) {
-            exit = true;
-          }
-          break;
-
-        case BOOLEAN:
-          if(!visitor.visit(depth, name, field, (Boolean) record.get(name))) {
-            exit = true;
-          }
-          break;
-
-        case STRING:
-          if(!visitor.visit(depth, name, field, (String) record.get(name))) {
-            exit = true;
-          }
-          break;
-
-        case BYTES:
-          Object val = record.get(field.getName());
-          if(val instanceof ByteBuffer) {
-            if(!visitor.visit(depth, name, field, Bytes.toBytes((ByteBuffer) val))) {
+        boolean exit = false;
+        switch(type) {
+          case INT:
+            if(!visitor.visit(depth, name, field, (Integer) record.get(name))) {
               exit = true;
             }
-          } else {
-            if(!visitor.visit(depth, name, field, (byte[])((byte[])val))) {
+            break;
+
+          case FLOAT:
+            if(!visitor.visit(depth, name, field, (Float) record.get(name))) {
               exit = true;
             }
-          }
-          break;
+            break;
 
-        case NULL:
-          if(!visitor.visit(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case MAP:
-          if(!visitor.visit(depth, name, field, (Map<String, String>) record.get(name))){
-            exit = true;
-          }
-          break;
-
-        case ARRAY:
-          List<StructuredRecord> rs = (List) record.get(name);
-          for (StructuredRecord r : rs ) {
-            if (!visitor.visit(depth + 1, name, field, r)) {
+          case DOUBLE:
+            if(!visitor.visit(depth, name, field, (Double) record.get(name))) {
               exit = true;
-              break;
             }
-          }
+            break;
+
+          case LONG:
+            if(!visitor.visit(depth, name, field, (Long) record.get(name))) {
+              exit = true;
+            }
+            break;
+
+          case BOOLEAN:
+            if(!visitor.visit(depth, name, field, (Boolean) record.get(name))) {
+              exit = true;
+            }
+            break;
+
+          case STRING:
+            if(!visitor.visit(depth, name, field, (String) record.get(name))) {
+              exit = true;
+            }
+            break;
+
+          case BYTES:
+            Object val = record.get(field.getName());
+            if(val instanceof ByteBuffer) {
+              if(!visitor.visit(depth, name, field, Bytes.toBytes((ByteBuffer) val))) {
+                exit = true;
+              }
+            } else {
+              if(!visitor.visit(depth, name, field, (byte[])((byte[])val))) {
+                exit = true;
+              }
+            }
+            break;
+
+          case NULL:
+            if(!visitor.visit(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case MAP:
+            if(!visitor.visit(depth, name, field, (Map<String, String>) record.get(name))){
+              exit = true;
+            }
+            break;
+
+          case ARRAY:
+            List<StructuredRecord> rs = (List) record.get(name);
+            for (StructuredRecord r : rs ) {
+              if (!visitor.visit(depth + 1, name, field, r)) {
+                exit = true;
+                break;
+              }
+            }
+            break;
+        }
+        if (exit) {
           break;
+        }
       }
-      if (exit) {
-        break;
-      }
+    } catch (VisitorException e) {
+      throw new ObserverException(e.getMessage());
     }
   }
 }

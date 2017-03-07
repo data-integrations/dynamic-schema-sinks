@@ -32,6 +32,7 @@ import co.cask.cdap.etl.api.batch.BatchSink;
 import co.cask.cdap.etl.api.batch.BatchSinkContext;
 import co.cask.dynamicschema.api.Expression;
 import co.cask.dynamicschema.api.ExpressionException;
+import co.cask.dynamicschema.api.ObserverException;
 import co.cask.dynamicschema.api.ValidationException;
 import co.cask.dynamicschema.observer.SchemaObserver;
 import co.cask.dynamicschema.observer.StructuredRecordObserver;
@@ -94,12 +95,15 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
     // Get the input schema and validate if there are fields that
     // support dynamic schema.
     Schema schema = configurer.getStageConfigurer().getInputSchema();
-    DynamicSchemaValidator dcv = new DynamicSchemaValidator();
-    SchemaObserver so = new SchemaObserver(dcv);
-    so.traverse(schema);
+
     try {
+      DynamicSchemaValidator dcv = new DynamicSchemaValidator();
+      SchemaObserver so = new SchemaObserver(dcv);
+      so.traverse(schema);
       dcv.validate();
     } catch (ValidationException e) {
+      throw new IllegalArgumentException(e.getMessage());
+    } catch (ObserverException e) {
       throw new IllegalArgumentException(e.getMessage());
     }
 

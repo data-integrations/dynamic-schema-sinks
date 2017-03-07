@@ -17,12 +17,10 @@
 package co.cask.dynamicschema.api;
 
 /**
- * Observer interface for traversing complex object.
+ * Exception thrown when the visitor has issues validating the object.
  */
-public interface Observer<T> {
-  /**
-   * Traverses the whole object tree.
-   * @param value defines the type of the object.
-   */
-  void traverse(T value) throws ObserverException;
+public class VisitorException extends Exception {
+  public VisitorException(String message) {
+    super(message);
+  }
 }
