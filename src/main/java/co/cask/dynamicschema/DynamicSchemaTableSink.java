@@ -48,10 +48,10 @@ import java.util.List;
  * Dynamic Schema support for writing to Table.
  */
 @Plugin(type = BatchSink.PLUGIN_TYPE)
-@Name("VarTable")
-@Description("Variable Schema support for Table writes.")
-public class VariableSchemaTableSink extends BatchSink<StructuredRecord, byte[], Put> {
-  private static final Logger LOG = LoggerFactory.getLogger(VariableSchemaTableSink.class);
+@Name("DynTable")
+@Description("Dynamic Schema support for Table writes.")
+public class DynamicSchemaTableSink extends BatchSink<StructuredRecord, byte[], Put> {
+  private static final Logger LOG = LoggerFactory.getLogger(DynamicSchemaTableSink.class);
 
   /**
    * HBase Plugin configuration to read configuration from JSON.
@@ -63,7 +63,7 @@ public class VariableSchemaTableSink extends BatchSink<StructuredRecord, byte[],
    */
   private Expression rowKeyExpression;
 
-  public VariableSchemaTableSink(TableSinkConfig config) {
+  public DynamicSchemaTableSink(TableSinkConfig config) {
     this.config = config;
   }
 

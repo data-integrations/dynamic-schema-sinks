@@ -2,8 +2,8 @@
 
 This repository contains HBase and CDAP Table Dataset sink with support for writing dynamic schema records. 
 
-* [HBase Sink](docs/VarTable-batchsink.md)
-* [CDAP Table Dataset Sink](docs/VarHBase-batchsink.md)
+* [HBase Sink](docs/DynTable-batchsink.md)
+* [CDAP Table Dataset Sink](docs/DynHBase-batchsink.md)
 
 ## Defining Dynamic Schema
 

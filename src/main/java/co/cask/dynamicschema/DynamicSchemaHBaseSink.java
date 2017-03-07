@@ -64,10 +64,10 @@ import java.util.Map;
  * Dynamic Schema support for writing to HBase.
  */
 @Plugin(type = BatchSink.PLUGIN_TYPE)
-@Name("VarHBase")
-@Description("Variable Schema support for HBase writes.")
-public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord, NullWritable, Mutation> {
-  private static final Logger LOG = LoggerFactory.getLogger(VariableSchemaHBaseSink.class);
+@Name("DynHBase")
+@Description("Dynamic Schema support for HBase writes.")
+public class DynamicSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord, NullWritable, Mutation> {
+  private static final Logger LOG = LoggerFactory.getLogger(DynamicSchemaHBaseSink.class);
 
   /**
    * HBase Plugin configuration to read configuration from JSON.
@@ -84,7 +84,7 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
    */
   private Expression familyExpression;
 
-  public VariableSchemaHBaseSink(HBaseSinkConfig config) {
+  public DynamicSchemaHBaseSink(HBaseSinkConfig config) {
     super(config);
     this.config = config;
   }
