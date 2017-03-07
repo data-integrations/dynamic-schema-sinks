@@ -28,7 +28,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import java.util.Map;
 
 /**
- *
+ * HBase PUT Generator visiting all parts of {@link StructuredRecord} record.
  */
 public class HBasePutGenerator implements StructuredRecordVisitor, Getable<Put> {
   /**

@@ -186,7 +186,7 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
       );
     } catch (IOException e) {
       throw new IllegalArgumentException(
-        String.format("Unable to connect to HBase table '%s'")
+        String.format("Unable to connect to HBase table '%s'", config.table)
       );
     }
   }
@@ -219,17 +219,17 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
     }
 
     context.addOutput(Output.of(config.referenceName, new HBaseOutputFormatProvider(config, conf)));
+  }
+
+  @Override
+  public void initialize(BatchRuntimeContext context) throws Exception {
+    super.initialize(context);
 
     // Row key resolver setup, we know by now that the expression is valid.
     rowKeyExpression = new Expression(config.rowkey);
 
     // Column family resolver setup, we know by now that is also valid.
     familyExpression = new Expression(config.family);
-  }
-
-  @Override
-  public void initialize(BatchRuntimeContext context) throws Exception {
-    super.initialize(context);
   }
 
   @Override
@@ -256,8 +256,9 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
 
     public HBaseOutputFormatProvider(HBaseSinkConfig config, Configuration configuration) {
       this.conf = new HashMap<String, String>();
+
       conf.put(TableOutputFormat.OUTPUT_TABLE, config.table);
-      conf.put(TableOutputFormat.QUORUM_ADDRESS, config.qorum);
+      conf.put(TableOutputFormat.QUORUM_ADDRESS, config.getQuorum());
       conf.put(TableOutputFormat.QUORUM_PORT, config.port);
       String[] serializationClasses = {
         configuration.get("io.serializations"),

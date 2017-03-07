@@ -73,6 +73,7 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
   @Nullable
   @Macro
   public String path;
+  private String quorum;
 
   public HBaseSinkConfig(String referenceName, String table, String rowkey, String family, String qorum,
                          String port, String durability, String path) {
@@ -86,6 +87,9 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
     this.path = path;
   }
 
+  /**
+   * @return configured port, if any error or empty returns default 2181
+   */
   public int getClientPort() {
     try {
       return Integer.parseInt(port);
@@ -94,7 +98,9 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
     }
   }
 
-
+  /**
+   * @return {@link Durability} setting based on user selection.
+   */
   public Durability getDurability() {
     if (durability.equalsIgnoreCase("wal ssynchronous")) {
       return Durability.ASYNC_WAL;
@@ -106,5 +112,16 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
       return Durability.SYNC_WAL;
     }
     return Durability.SYNC_WAL;
+  }
+
+  /**
+   * @return the formatted quorum string to connect to zookeeper.
+   */
+  public String getQuorum() {
+    return String.format("%s:%s:%s",
+                         quorum == null || quorum.isEmpty() ? "localhost" : qorum,
+                         getClientPort(),
+                         path == null || path.isEmpty() ? "/hbase" : path
+    );
   }
 }
