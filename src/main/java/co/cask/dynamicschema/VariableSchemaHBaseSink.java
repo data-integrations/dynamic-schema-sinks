@@ -218,19 +218,16 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
       LOG.info(msg);
       throw new IllegalArgumentException(msg);
     }
-
     context.addOutput(Output.of(config.referenceName, new HBaseOutputFormatProvider(config, conf)));
-
-    // Row key resolver setup, we know by now that the expression is valid.
-    rowKeyExpression = new Expression(config.rowkey);
-
-    // Column family resolver setup, we know by now that is also valid.
-    familyExpression = new Expression(config.family);
   }
 
   @Override
   public void initialize(BatchRuntimeContext context) throws Exception {
     super.initialize(context);
+    // Row key resolver setup, we know by now that the expression is valid.
+    rowKeyExpression = new Expression(config.rowkey);
+    // Column family resolver setup, we know by now that is also valid.
+    familyExpression = new Expression(config.family);
   }
 
   @Override
