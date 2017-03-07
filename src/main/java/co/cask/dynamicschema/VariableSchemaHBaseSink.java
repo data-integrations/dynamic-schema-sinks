@@ -262,7 +262,6 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
       String zkClientPort = String.valueOf(config.getClientPort());
       String zkNodeParent = !Strings.isNullOrEmpty(config.path) ? config.path : "/hbase";
       conf.put(TableOutputFormat.QUORUM_ADDRESS, String.format("%s:%s:%s", zkQuorum, zkClientPort, zkNodeParent));
-      conf.put(TableOutputFormat.QUORUM_ADDRESS, config.qorum);
       conf.put(TableOutputFormat.QUORUM_PORT, config.port);
       String[] serializationClasses = {
         configuration.get("io.serializations"),
