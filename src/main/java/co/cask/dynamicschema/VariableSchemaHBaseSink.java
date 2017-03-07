@@ -37,6 +37,7 @@ import co.cask.dynamicschema.observer.SchemaObserver;
 import co.cask.dynamicschema.observer.StructuredRecordObserver;
 import co.cask.hydrator.common.ReferenceBatchSink;
 import co.cask.hydrator.common.batch.JobUtils;
+import com.google.common.base.Strings;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HConstants;
@@ -186,7 +187,7 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
       );
     } catch (IOException e) {
       throw new IllegalArgumentException(
-        String.format("Unable to connect to HBase table '%s'")
+        String.format("Unable to connect to HBase table '%s'", config.table)
       );
     }
   }
@@ -257,6 +258,10 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
     public HBaseOutputFormatProvider(HBaseSinkConfig config, Configuration configuration) {
       this.conf = new HashMap<String, String>();
       conf.put(TableOutputFormat.OUTPUT_TABLE, config.table);
+      String zkQuorum = !Strings.isNullOrEmpty(config.qorum) ? config.qorum : "localhost";
+      String zkClientPort = String.valueOf(config.getClientPort());
+      String zkNodeParent = !Strings.isNullOrEmpty(config.path) ? config.path : "/hbase";
+      conf.put(TableOutputFormat.QUORUM_ADDRESS, String.format("%s:%s:%s", zkQuorum, zkClientPort, zkNodeParent));
       conf.put(TableOutputFormat.QUORUM_ADDRESS, config.qorum);
       conf.put(TableOutputFormat.QUORUM_PORT, config.port);
       String[] serializationClasses = {

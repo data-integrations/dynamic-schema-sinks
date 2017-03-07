@@ -34,7 +34,7 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
   public String table;
 
   @Name("rowkey")
-  @Description("Expression to specify row key")
+  @Description("Expression to specify row key or name of the input column")
   @Macro
   public String rowkey;
 
