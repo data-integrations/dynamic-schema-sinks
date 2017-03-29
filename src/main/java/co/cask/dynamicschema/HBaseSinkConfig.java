@@ -43,13 +43,6 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
   @Macro
   public String family;
 
-
-  @Name("namespace")
-  @Description("Namespace to be used")
-  @Nullable
-  @Macro
-  public String namespace;
-
   @Name("qorum")
   @Description("Zookeeper Server Qorum. e.g. <hostname>[[:port]:path]")
   @Nullable
@@ -73,7 +66,6 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
   @Nullable
   @Macro
   public String path;
-  private String quorum;
 
   public HBaseSinkConfig(String referenceName, String table, String rowkey, String family, String qorum,
                          String port, String durability, String path) {
@@ -119,7 +111,7 @@ public class HBaseSinkConfig extends ReferencePluginConfig {
    */
   public String getQuorum() {
     return String.format("%s:%s:%s",
-                         quorum == null || quorum.isEmpty() ? "localhost" : qorum,
+                         qorum == null || qorum.isEmpty() ? "localhost" : qorum,
                          getClientPort(),
                          path == null || path.isEmpty() ? "/hbase" : path
     );

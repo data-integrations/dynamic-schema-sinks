@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Tests {@link VariableSchemaHBaseSink}
+ * Tests {@link DynamicSchemaHBaseSink}
  */
-public class VariableSchemaHBaseSinkTest {
+public class DynamicSchemaHBaseSinkTest {
 
   public final class GoodDynamicSchema {
     private String field;

@@ -17,8 +17,10 @@
 package co.cask.dynamicschema.observer;
 
 import co.cask.dynamicschema.api.Observer;
+import co.cask.dynamicschema.api.ObserverException;
 import co.cask.dynamicschema.api.SchemaVisitor;
 import co.cask.cdap.api.data.schema.Schema;
+import co.cask.dynamicschema.api.VisitorException;
 
 /**
  * Structured Record Observer.
@@ -30,11 +32,11 @@ public final class SchemaObserver implements Observer<Schema> {
     this.visitor = visitor;
   }
 
-  public void traverse(Schema schema) {
+  public void traverse(Schema schema) throws ObserverException {
     traverse(schema, 0);
   }
 
-  private void traverse(Schema schema, int depth) {
+  private void traverse(Schema schema, int depth) throws ObserverException {
     for (Schema.Field field : schema.getFields()) {
       Schema.Type type;
       if (!field.getSchema().isNullable()) {
@@ -45,67 +47,73 @@ public final class SchemaObserver implements Observer<Schema> {
 
       String name = field.getName();
 
-      boolean exit = false;
-      switch(type) {
-        case INT:
-          if(!visitor.visitInt(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case FLOAT:
-          if(!visitor.visitFloat(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case DOUBLE:
-          if(!visitor.visitDouble(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case LONG:
-          if(!visitor.visitLong(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case BOOLEAN:
-          if(!visitor.visitBoolean(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case STRING:
-          if(!visitor.visitString(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case BYTES:
-          if(!visitor.visitBytes(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case NULL:
-          if(!visitor.visitNull(depth, name, field)) {
-            exit = true;
-          }
-          break;
-
-        case MAP:
-          if(!visitor.visitMap(depth, name, field)){
-            exit = true;
-          }
-          break;
-
-        case ARRAY:
-          if (!visitor.visitArray(depth + 1, name, field)) {
-            exit = true;
+      try {
+        boolean exit = false;
+        switch(type) {
+          case INT:
+            if(!visitor.visitInt(depth, name, field)) {
+              exit = true;
+            }
             break;
-          }
+
+          case FLOAT:
+            if(!visitor.visitFloat(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case DOUBLE:
+            if(!visitor.visitDouble(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case LONG:
+            if(!visitor.visitLong(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case BOOLEAN:
+            if(!visitor.visitBoolean(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case STRING:
+            if(!visitor.visitString(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case BYTES:
+            if(!visitor.visitBytes(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case NULL:
+            if(!visitor.visitNull(depth, name, field)) {
+              exit = true;
+            }
+            break;
+
+          case MAP:
+            if(!visitor.visitMap(depth, name, field)){
+              exit = true;
+            }
+            break;
+
+          case ARRAY:
+            if (!visitor.visitArray(depth + 1, name, field)) {
+              exit = true;
+              break;
+            }
+        }
+      } catch (VisitorException e) {
+        throw new ObserverException(
+          e.getMessage()
+        );
       }
     }
   }

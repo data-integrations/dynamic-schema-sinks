@@ -21,6 +21,7 @@ import co.cask.dynamicschema.api.Getable;
 import co.cask.dynamicschema.api.GetableException;
 import co.cask.cdap.api.data.format.StructuredRecord;
 import co.cask.cdap.api.data.schema.Schema;
+import co.cask.dynamicschema.api.VisitorException;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -53,68 +54,68 @@ public class HBasePutGenerator implements StructuredRecordVisitor, Getable<Put> 
     this.put.setDurability(durability);
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, StructuredRecord value) {
+  public boolean visit(int depth, String name, Schema.Field field, StructuredRecord value) throws VisitorException {
     if (depth > 0) {
       // It's a sub-record.
       int size = value.getSchema().getFields().size();
       if (size  == 2) {
         String fld = value.get("field");
         String val = value.get("value");
-        put.add(family, Bytes.toBytes(fld), Bytes.toBytes(val));
+        put.addColumn(family, Bytes.toBytes(fld), Bytes.toBytes(val));
       } else {
         String fld = value.get("field");
         String val = value.get("value");
         String type = value.get("type");
-        put.add(family, Bytes.toBytes(fld), Bytes.toBytes(val));
+        put.addColumn(family, Bytes.toBytes(fld), Bytes.toBytes(val));
       }
     }
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, String value) {
+  public boolean visit(int depth, String name, Schema.Field field, String value) throws VisitorException {
+    put.addColumn(family, Bytes.toBytes(name), Bytes.toBytes(value));
+    return true;
+  }
+
+  public boolean visit(int depth, String name, Schema.Field field, Integer value) throws VisitorException {
     put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Integer value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+  public boolean visit(int depth, String name, Schema.Field field, Float value) throws VisitorException {
+    put.addColumn(family, Bytes.toBytes(name), Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Float value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+  public boolean visit(int depth, String name, Schema.Field field, Double value) throws VisitorException {
+    put.addColumn(family, Bytes.toBytes(name), Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Double value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+  public boolean visit(int depth, String name, Schema.Field field, Boolean value) throws VisitorException {
+    put.addColumn(family, Bytes.toBytes(name), Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Boolean value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
+  public boolean visit(int depth, String name, Schema.Field field, Long value) throws VisitorException {
+    put.addColumn(family, Bytes.toBytes(name), Bytes.toBytes(value));
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, Long value) {
-    put.add(family, Bytes.toBytes(name), Bytes.toBytes(value));
-    return true;
-  }
-
-  public boolean visit(int depth, String name, Schema.Field field, Map<String, String> value) {
+  public boolean visit(int depth, String name, Schema.Field field, Map<String, String> value) throws VisitorException {
     for (Map.Entry<String, String> entry : value.entrySet()) {
-      put.add(family, Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+      put.addColumn(family, Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
     }
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field, byte[] value) {
-    put.add(family, Bytes.toBytes(name), value);
+  public boolean visit(int depth, String name, Schema.Field field, byte[] value) throws VisitorException {
+    put.addColumn(family, Bytes.toBytes(name), value);
     return true;
   }
 
-  public boolean visit(int depth, String name, Schema.Field field) {
-    put.add(family, Bytes.toBytes(name), (byte[]) null);
+  public boolean visit(int depth, String name, Schema.Field field) throws VisitorException {
+    put.addColumn(family, Bytes.toBytes(name), (byte[]) null);
     return true;
   }
 

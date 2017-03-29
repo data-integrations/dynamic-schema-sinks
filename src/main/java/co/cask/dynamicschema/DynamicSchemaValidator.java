@@ -4,7 +4,9 @@ import co.cask.dynamicschema.api.AbstractSchemaVisitor;
 import co.cask.dynamicschema.api.ValidationException;
 import co.cask.dynamicschema.api.Validator;
 import co.cask.cdap.api.data.schema.Schema;
+import co.cask.dynamicschema.api.VisitorException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DynamicSchemaValidator extends AbstractSchemaVisitor implements Validator {
@@ -17,12 +19,19 @@ public class DynamicSchemaValidator extends AbstractSchemaVisitor implements Val
   }
 
   @Override
-  public boolean visitArray(int i, String name, Schema.Field field) {
+  public boolean visitArray(int i, String name, Schema.Field field) throws VisitorException {
     valid = true;
     message = "OK";
 
-    Schema schema = field.getSchema().getNonNullable().getComponentSchema().getNonNullable();
-    List<Schema.Field> fields = schema.getFields();
+    List<Schema.Field> fields = new ArrayList<>();
+    try {
+      Schema schema = field.getSchema().getNonNullable().getComponentSchema().getNonNullable();
+       fields = schema.getFields();
+    } catch (Exception e) {
+      throw new VisitorException (
+        "Dynamic schema can only support array of records. Please make sure you have only array of records."
+      );
+    }
 
     int size = fields.size();
     if (size != 2 && size != 3) {

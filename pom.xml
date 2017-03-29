@@ -53,9 +53,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/hydrator/wrangler-transform.git</connection>
-    <developerConnection>scm:git:git@github.com:hydrator/wrangler-transform.git</developerConnection>
-    <url>https://github.com/hydrator/wrangler-transform.git</url>
+    <connection>scm:git:https://github.com/hydrator/dynamic-schema-sinks.git</connection>
+    <developerConnection>scm:git:git@github.com:hydrator/dynamic-schema-sinks.git</developerConnection>
+    <url>https://github.com/hydrator/dynamic-schema-sinks.git</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -103,11 +103,13 @@
       <groupId>co.cask.cdap</groupId>
       <artifactId>cdap-etl-api</artifactId>
       <version>${cdap.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>co.cask.cdap</groupId>
       <artifactId>cdap-formats</artifactId>
       <version>${cdap.version}</version>
+      <scope>provided</scope>
     </dependency>
     <!-- needed by TableOutputFormat, but TableOutputFormat is provided scope -->
     <dependency>
@@ -134,6 +136,7 @@
       <groupId>co.cask.hydrator</groupId>
       <artifactId>hydrator-common</artifactId>
       <version>${hydrator.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>co.cask.cdap</groupId>
@@ -211,11 +214,13 @@
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
       <version>${hadoop.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

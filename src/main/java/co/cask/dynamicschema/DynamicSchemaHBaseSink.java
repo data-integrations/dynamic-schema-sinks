@@ -32,6 +32,7 @@ import co.cask.cdap.etl.api.batch.BatchSink;
 import co.cask.cdap.etl.api.batch.BatchSinkContext;
 import co.cask.dynamicschema.api.Expression;
 import co.cask.dynamicschema.api.ExpressionException;
+import co.cask.dynamicschema.api.ObserverException;
 import co.cask.dynamicschema.api.ValidationException;
 import co.cask.dynamicschema.observer.SchemaObserver;
 import co.cask.dynamicschema.observer.StructuredRecordObserver;
@@ -63,10 +64,10 @@ import java.util.Map;
  * Dynamic Schema support for writing to HBase.
  */
 @Plugin(type = BatchSink.PLUGIN_TYPE)
-@Name("VarHBase")
-@Description("Variable Schema support for HBase writes.")
-public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord, NullWritable, Mutation> {
-  private static final Logger LOG = LoggerFactory.getLogger(VariableSchemaHBaseSink.class);
+@Name("DynHBase")
+@Description("Dynamic Schema support for HBase writes.")
+public class DynamicSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord, NullWritable, Mutation> {
+  private static final Logger LOG = LoggerFactory.getLogger(DynamicSchemaHBaseSink.class);
 
   /**
    * HBase Plugin configuration to read configuration from JSON.
@@ -83,7 +84,7 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
    */
   private Expression familyExpression;
 
-  public VariableSchemaHBaseSink(HBaseSinkConfig config) {
+  public DynamicSchemaHBaseSink(HBaseSinkConfig config) {
     super(config);
     this.config = config;
   }
@@ -94,12 +95,15 @@ public class VariableSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord
     // Get the input schema and validate if there are fields that
     // support dynamic schema.
     Schema schema = configurer.getStageConfigurer().getInputSchema();
-    DynamicSchemaValidator dcv = new DynamicSchemaValidator();
-    SchemaObserver so = new SchemaObserver(dcv);
-    so.traverse(schema);
+
     try {
+      DynamicSchemaValidator dcv = new DynamicSchemaValidator();
+      SchemaObserver so = new SchemaObserver(dcv);
+      so.traverse(schema);
       dcv.validate();
     } catch (ValidationException e) {
+      throw new IllegalArgumentException(e.getMessage());
+    } catch (ObserverException e) {
       throw new IllegalArgumentException(e.getMessage());
     }
 
