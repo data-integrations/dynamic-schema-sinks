@@ -1,7 +1,8 @@
 {
   "metadata": {
-    "spec-version": "1.0"
+    "spec-version": "1.5"
   },
+  "display-name": "HBase Table with Dynamic Schema",
   "configuration-groups": [
     {
       "label": "HBase Configuration",
