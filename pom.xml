@@ -27,12 +27,12 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <cdap.version>4.3.1</cdap.version>
+    <cdap.version>5.1.2</cdap.version>
     <avro.version>1.7.7</avro.version>
     <hadoop.version>2.3.0</hadoop.version>
     <hbase.version>1.1.2</hbase.version>
     <zookeeper.version>3.4.5</zookeeper.version>
-    <hydrator.version>1.8.1</hydrator.version>
+    <hydrator.version>2.2.0-SNAPSHOT</hydrator.version>
     <commons-jexl.version>3.0</commons-jexl.version>
     <junit.version>4.11</junit.version>
     <main.basedir>${project.basedir}</main.basedir>
@@ -264,8 +264,8 @@
           <version>1.0.0-SNAPSHOT</version>
           <configuration>
             <cdapArtifacts>
-              <parent>system:cdap-data-pipeline[4.0.0,5.0.0-SNAPSHOT)</parent>
-              <parent>system:cdap-data-streams[4.0.0,5.0.0-SNAPSHOT)</parent>
+              <parent>system:cdap-data-pipeline[4.0.0,6.0.0-SNAPSHOT)</parent>
+              <parent>system:cdap-data-streams[4.0.0,6.0.0-SNAPSHOT)</parent>
             </cdapArtifacts>
           </configuration>
           <executions>
