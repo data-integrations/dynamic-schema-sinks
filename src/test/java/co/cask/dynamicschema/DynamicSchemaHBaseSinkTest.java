@@ -1,12 +1,12 @@
-package co.cask.dynamicschema;
+package io.cdap.dynamicschema;
 
-import co.cask.cdap.api.common.Bytes;
-import co.cask.cdap.api.data.format.StructuredRecord;
-import co.cask.cdap.api.data.schema.Schema;
-import co.cask.cdap.internal.io.ReflectionSchemaGenerator;
-import co.cask.dynamicschema.api.ValidationException;
-import co.cask.dynamicschema.observer.SchemaObserver;
-import co.cask.dynamicschema.observer.StructuredRecordObserver;
+import io.cdap.cdap.api.common.Bytes;
+import io.cdap.cdap.api.data.format.StructuredRecord;
+import io.cdap.cdap.api.data.schema.Schema;
+import io.cdap.cdap.internal.io.ReflectionSchemaGenerator;
+import io.cdap.dynamicschema.api.ValidationException;
+import io.cdap.dynamicschema.observer.SchemaObserver;
+import io.cdap.dynamicschema.observer.StructuredRecordObserver;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.client.Put;
 import org.junit.Assert;
@@ -127,7 +127,7 @@ public class DynamicSchemaHBaseSinkTest {
     TablePutGenerator tablePutGenerator = new TablePutGenerator(key);
     StructuredRecordObserver observer = new StructuredRecordObserver(tablePutGenerator);
     observer.traverse(record);
-    co.cask.cdap.api.dataset.table.Put put = tablePutGenerator.get();
+    io.cdap.cdap.api.dataset.table.Put put = tablePutGenerator.get();
     Assert.assertNotNull(put);
 
     Assert.assertTrue(1==1);

@@ -13,13 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package co.cask.dynamicschema.api;
+
+package io.cdap.dynamicschema.api;
 
 /**
- * Exception throw when there is issue resolving the key expression.
+ * Generic interface for validating object.
  */
-public class ExpressionException extends Exception {
-  public ExpressionException(String message) {
-    super(message);
-  }
+public interface Validator {
+  /**
+   * Applies validation on the object.
+   * @throws ValidationException throw if there are validation errors.
+   */
+  public void validate() throws ValidationException;
 }

@@ -14,15 +14,14 @@
  * the License.
  */
 
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
-import co.cask.cdap.api.data.schema.Schema;
+import io.cdap.cdap.api.data.schema.Schema;
 
 /**
- * Abstract Schema Visitor to help with reducing the code.
+ * Schema Visitor pattern.
  */
-public class AbstractSchemaVisitor implements SchemaVisitor {
-
+public interface SchemaVisitor {
   /**
    * Called when schema has type INT.
    *
@@ -31,9 +30,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitInt(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitInt(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type FLOAT.
@@ -43,9 +40,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitFloat(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitFloat(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type DOUBLE.
@@ -55,9 +50,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitDouble(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitDouble(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type LONG.
@@ -67,9 +60,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitLong(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitLong(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type BOOLEAN.
@@ -79,9 +70,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitBoolean(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitBoolean(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type STRING.
@@ -91,9 +80,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitString(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitString(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type BYTES.
@@ -103,9 +90,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitBytes(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitBytes(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type NULL.
@@ -115,9 +100,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitNull(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitNull(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type MAP.
@@ -127,9 +110,7 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitMap(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitMap(int depth, String name, Schema.Field field) throws VisitorException;
 
   /**
    * Called when schema has type ARRAY.
@@ -139,7 +120,5 @@ public class AbstractSchemaVisitor implements SchemaVisitor {
    * @param field type.
    * @return true to continue, false to stop processing.
    */
-  public boolean visitArray(int depth, String name, Schema.Field field) throws VisitorException {
-    return true;
-  }
+  boolean visitArray(int depth, String name, Schema.Field field) throws VisitorException;
 }

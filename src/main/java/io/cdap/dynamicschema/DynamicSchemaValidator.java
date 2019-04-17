@@ -1,10 +1,10 @@
-package co.cask.dynamicschema;
+package io.cdap.dynamicschema;
 
-import co.cask.dynamicschema.api.AbstractSchemaVisitor;
-import co.cask.dynamicschema.api.ValidationException;
-import co.cask.dynamicschema.api.Validator;
-import co.cask.cdap.api.data.schema.Schema;
-import co.cask.dynamicschema.api.VisitorException;
+import io.cdap.dynamicschema.api.AbstractSchemaVisitor;
+import io.cdap.dynamicschema.api.ValidationException;
+import io.cdap.dynamicschema.api.Validator;
+import io.cdap.cdap.api.data.schema.Schema;
+import io.cdap.dynamicschema.api.VisitorException;
 
 import java.util.ArrayList;
 import java.util.List;
