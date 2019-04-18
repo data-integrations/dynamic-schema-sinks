@@ -14,16 +14,13 @@
  * the License.
  */
 
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
 /**
- * Interface for retrieve the result of any operation.
+ * Thrown when there is error getting value.
  */
-public interface Getable<T> {
-
-  /**
-   * @return value of type 'T' associated with operation.
-   * @throws GetableException throw when there is issue retrieving the value.
-   */
-  public T get() throws GetableException;
+public class GetableException extends Exception {
+  public GetableException(String message) {
+    super(message);
+  }
 }

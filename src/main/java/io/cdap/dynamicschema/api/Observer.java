@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
 /**
  * Observer interface for traversing complex object.

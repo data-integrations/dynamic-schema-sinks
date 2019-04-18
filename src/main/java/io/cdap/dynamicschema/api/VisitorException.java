@@ -14,13 +14,13 @@
  * the License.
  */
 
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
 /**
- * Exception thrown when the validator has issues validating the object.
+ * Exception thrown when the visitor has issues validating the object.
  */
-public class ValidationException extends Exception {
-  public ValidationException(String message) {
+public class VisitorException extends Exception {
+  public VisitorException(String message) {
     super(message);
   }
 }

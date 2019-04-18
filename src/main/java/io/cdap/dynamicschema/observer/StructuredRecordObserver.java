@@ -14,14 +14,14 @@
  * the License.
  */
 
-package co.cask.dynamicschema.observer;
+package io.cdap.dynamicschema.observer;
 
-import co.cask.cdap.api.data.format.StructuredRecord;
-import co.cask.cdap.api.data.schema.Schema;
-import co.cask.dynamicschema.api.Observer;
-import co.cask.dynamicschema.api.ObserverException;
-import co.cask.dynamicschema.api.StructuredRecordVisitor;
-import co.cask.dynamicschema.api.VisitorException;
+import io.cdap.cdap.api.data.format.StructuredRecord;
+import io.cdap.cdap.api.data.schema.Schema;
+import io.cdap.dynamicschema.api.Observer;
+import io.cdap.dynamicschema.api.ObserverException;
+import io.cdap.dynamicschema.api.StructuredRecordVisitor;
+import io.cdap.dynamicschema.api.VisitorException;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.nio.ByteBuffer;

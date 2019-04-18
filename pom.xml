@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright © 2016 Cask Data, Inc.
+  ~ Copyright © 2016 CDAP
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not
   ~ use this file except in compliance with the License. You may obtain a copy of
@@ -18,16 +18,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>co.cask</groupId>
+  <groupId>io.cdap</groupId>
   <artifactId>dynamic-schema-sinks</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <name>Dynamic Schema Sinks</name>
   <packaging>jar</packaging>
   <description>Dynamic schema based Sinks</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <cdap.version>5.1.2</cdap.version>
+    <cdap.version>6.0.0-SNAPSHOT</cdap.version>
     <avro.version>1.7.7</avro.version>
     <hadoop.version>2.3.0</hadoop.version>
     <hbase.version>1.1.2</hbase.version>
@@ -40,9 +40,9 @@
 
   <developers>
     <developer>
-      <name>Cask Data</name>
-      <email>cask-dev@googlegroups.com</email>
-      <organization>Cask Data, Inc.</organization>
+      <name>CDAP</name>
+      <email>cdap-dev@googlegroups.com</email>
+      <organization>CDAP</organization>
       <organizationUrl>http://www.cdap.io</organizationUrl>
     </developer>
   </developers>
@@ -64,8 +64,8 @@
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
     <site>
-      <id>cask</id>
-      <url>http://cask.co</url>
+      <id>cdap</id>
+      <url>http://cdap.io</url>
     </site>
   </distributionManagement>
 
@@ -95,13 +95,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>co.cask.cdap</groupId>
+      <groupId>io.cdap.cdap</groupId>
       <artifactId>cdap-etl-api</artifactId>
       <version>${cdap.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>co.cask.cdap</groupId>
+      <groupId>io.cdap.cdap</groupId>
       <artifactId>cdap-formats</artifactId>
       <version>${cdap.version}</version>
       <scope>provided</scope>
@@ -128,18 +128,18 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>co.cask.hydrator</groupId>
+      <groupId>io.cdap.plugin</groupId>
       <artifactId>hydrator-common</artifactId>
       <version>${hydrator.version}</version>
     </dependency>
     <dependency>
-      <groupId>co.cask.cdap</groupId>
+      <groupId>io.cdap.cdap</groupId>
       <artifactId>cdap-data-pipeline</artifactId>
       <version>${cdap.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>co.cask.cdap</groupId>
+      <groupId>io.cdap.cdap</groupId>
       <artifactId>hydrator-test</artifactId>
       <version>${cdap.version}</version>
       <scope>test</scope>
@@ -246,7 +246,7 @@
               <Embed-Transitive>true</Embed-Transitive>
               <Embed-Directory>lib</Embed-Directory>
               <!--Only @Plugin classes in the export packages will be included as plugin-->
-              <_exportcontents>co.cask.dynamicschema.*,org.apache.hadoop.hbase.*</_exportcontents>
+              <_exportcontents>io.cdap.dynamicschema.*,org.apache.hadoop.hbase.*</_exportcontents>
             </instructions>
           </configuration>
           <executions>
@@ -338,7 +338,7 @@
               </links>
               <doctitle>${project.table} ${project.version}</doctitle>
               <bottom>
-                <![CDATA[Copyright &#169; {currentYear} <a href="http://cask.co" target="_blank">Cask Data, Inc.</a> Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>.]]>
+                <![CDATA[Copyright &#169; {currentYear} <a href="http://cdap.io" target="_blank">CDAP</a> Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>.]]>
               </bottom>
             </configuration>
             <executions>
