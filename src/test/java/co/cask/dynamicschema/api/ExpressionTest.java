@@ -14,11 +14,11 @@
  * the License.
  */
 
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
-import co.cask.cdap.api.data.format.StructuredRecord;
-import co.cask.cdap.api.data.schema.Schema;
-import co.cask.cdap.internal.io.ReflectionSchemaGenerator;
+import io.cdap.cdap.api.data.format.StructuredRecord;
+import io.cdap.cdap.api.data.schema.Schema;
+import io.cdap.cdap.internal.io.ReflectionSchemaGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 

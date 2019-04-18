@@ -14,12 +14,12 @@
  * the License.
  */
 
-package co.cask.dynamicschema;
+package io.cdap.dynamicschema;
 
-import co.cask.cdap.api.annotation.Description;
-import co.cask.cdap.api.annotation.Macro;
-import co.cask.cdap.api.annotation.Name;
-import co.cask.hydrator.common.ReferencePluginConfig;
+import io.cdap.cdap.api.annotation.Description;
+import io.cdap.cdap.api.annotation.Macro;
+import io.cdap.cdap.api.annotation.Name;
+import io.cdap.plugin.common.ReferencePluginConfig;
 
 /**
  * Table Sink plugin configuration.

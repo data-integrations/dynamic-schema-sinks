@@ -14,15 +14,16 @@
  * the License.
  */
 
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
 /**
- * Generic interface for validating object.
+ * Interface for retrieve the result of any operation.
  */
-public interface Validator {
+public interface Getable<T> {
+
   /**
-   * Applies validation on the object.
-   * @throws ValidationException throw if there are validation errors.
+   * @return value of type 'T' associated with operation.
+   * @throws GetableException throw when there is issue retrieving the value.
    */
-  public void validate() throws ValidationException;
+  public T get() throws GetableException;
 }

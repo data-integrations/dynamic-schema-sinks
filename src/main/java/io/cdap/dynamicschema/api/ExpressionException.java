@@ -13,14 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
 /**
- * Exception thrown when the visitor has issues validating the object.
+ * Exception throw when there is issue resolving the key expression.
  */
-public class VisitorException extends Exception {
-  public VisitorException(String message) {
+public class ExpressionException extends Exception {
+  public ExpressionException(String message) {
     super(message);
   }
 }

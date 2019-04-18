@@ -14,30 +14,30 @@
  * the License.
  */
 
-package co.cask.dynamicschema;
+package io.cdap.dynamicschema;
 
-import co.cask.cdap.api.annotation.Description;
-import co.cask.cdap.api.annotation.Name;
-import co.cask.cdap.api.annotation.Plugin;
-import co.cask.cdap.api.common.Bytes;
-import co.cask.cdap.api.data.batch.Output;
-import co.cask.cdap.api.data.batch.OutputFormatProvider;
-import co.cask.cdap.api.data.format.StructuredRecord;
-import co.cask.cdap.api.data.schema.Schema;
-import co.cask.cdap.api.dataset.lib.KeyValue;
-import co.cask.cdap.etl.api.Emitter;
-import co.cask.cdap.etl.api.PipelineConfigurer;
-import co.cask.cdap.etl.api.batch.BatchRuntimeContext;
-import co.cask.cdap.etl.api.batch.BatchSink;
-import co.cask.cdap.etl.api.batch.BatchSinkContext;
-import co.cask.dynamicschema.api.Expression;
-import co.cask.dynamicschema.api.ExpressionException;
-import co.cask.dynamicschema.api.ObserverException;
-import co.cask.dynamicschema.api.ValidationException;
-import co.cask.dynamicschema.observer.SchemaObserver;
-import co.cask.dynamicschema.observer.StructuredRecordObserver;
-import co.cask.hydrator.common.ReferenceBatchSink;
-import co.cask.hydrator.common.batch.JobUtils;
+import io.cdap.cdap.api.annotation.Description;
+import io.cdap.cdap.api.annotation.Name;
+import io.cdap.cdap.api.annotation.Plugin;
+import io.cdap.cdap.api.common.Bytes;
+import io.cdap.cdap.api.data.batch.Output;
+import io.cdap.cdap.api.data.batch.OutputFormatProvider;
+import io.cdap.cdap.api.data.format.StructuredRecord;
+import io.cdap.cdap.api.data.schema.Schema;
+import io.cdap.cdap.api.dataset.lib.KeyValue;
+import io.cdap.cdap.etl.api.Emitter;
+import io.cdap.cdap.etl.api.PipelineConfigurer;
+import io.cdap.cdap.etl.api.batch.BatchRuntimeContext;
+import io.cdap.cdap.etl.api.batch.BatchSink;
+import io.cdap.cdap.etl.api.batch.BatchSinkContext;
+import io.cdap.dynamicschema.api.Expression;
+import io.cdap.dynamicschema.api.ExpressionException;
+import io.cdap.dynamicschema.api.ObserverException;
+import io.cdap.dynamicschema.api.ValidationException;
+import io.cdap.dynamicschema.observer.SchemaObserver;
+import io.cdap.dynamicschema.observer.StructuredRecordObserver;
+import io.cdap.plugin.common.ReferenceBatchSink;
+import io.cdap.plugin.common.batch.JobUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HConstants;

@@ -14,14 +14,14 @@
  * the License.
  */
 
-package co.cask.dynamicschema;
+package io.cdap.dynamicschema;
 
-import co.cask.dynamicschema.api.StructuredRecordVisitor;
-import co.cask.dynamicschema.api.Getable;
-import co.cask.dynamicschema.api.GetableException;
-import co.cask.cdap.api.data.format.StructuredRecord;
-import co.cask.cdap.api.data.schema.Schema;
-import co.cask.dynamicschema.api.VisitorException;
+import io.cdap.dynamicschema.api.StructuredRecordVisitor;
+import io.cdap.dynamicschema.api.Getable;
+import io.cdap.dynamicschema.api.GetableException;
+import io.cdap.cdap.api.data.format.StructuredRecord;
+import io.cdap.cdap.api.data.schema.Schema;
+import io.cdap.dynamicschema.api.VisitorException;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;

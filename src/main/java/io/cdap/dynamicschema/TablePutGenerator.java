@@ -14,16 +14,16 @@
  * the License.
  */
 
-package co.cask.dynamicschema;
+package io.cdap.dynamicschema;
 
-import co.cask.cdap.api.common.Bytes;
-import co.cask.cdap.api.data.format.StructuredRecord;
-import co.cask.cdap.api.data.schema.Schema;
-import co.cask.cdap.api.dataset.table.Put;
-import co.cask.dynamicschema.api.Getable;
-import co.cask.dynamicschema.api.GetableException;
-import co.cask.dynamicschema.api.StructuredRecordVisitor;
-import co.cask.dynamicschema.api.VisitorException;
+import io.cdap.cdap.api.common.Bytes;
+import io.cdap.cdap.api.data.format.StructuredRecord;
+import io.cdap.cdap.api.data.schema.Schema;
+import io.cdap.cdap.api.dataset.table.Put;
+import io.cdap.dynamicschema.api.Getable;
+import io.cdap.dynamicschema.api.GetableException;
+import io.cdap.dynamicschema.api.StructuredRecordVisitor;
+import io.cdap.dynamicschema.api.VisitorException;
 
 import java.util.Map;
 

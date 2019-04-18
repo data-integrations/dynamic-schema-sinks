@@ -1,4 +1,4 @@
-package co.cask.dynamicschema.api;
+package io.cdap.dynamicschema.api;
 
 /**
  * Thrown when there is a visiting exception.
