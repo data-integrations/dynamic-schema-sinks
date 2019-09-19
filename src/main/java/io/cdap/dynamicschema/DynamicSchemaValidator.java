@@ -1,12 +1,11 @@
 package io.cdap.dynamicschema;
 
+import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.dynamicschema.api.AbstractSchemaVisitor;
 import io.cdap.dynamicschema.api.ValidationException;
 import io.cdap.dynamicschema.api.Validator;
-import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.dynamicschema.api.VisitorException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DynamicSchemaValidator extends AbstractSchemaVisitor implements Validator {
@@ -23,12 +22,13 @@ public class DynamicSchemaValidator extends AbstractSchemaVisitor implements Val
     valid = true;
     message = "OK";
 
-    List<Schema.Field> fields = new ArrayList<>();
+    List<Schema.Field> fields;
     try {
-      Schema schema = field.getSchema().getNonNullable().getComponentSchema().getNonNullable();
-       fields = schema.getFields();
+      Schema schema = getNonNullable(field.getSchema());
+      Schema componentSchema = getNonNullable(schema.getComponentSchema());
+      fields = componentSchema.getFields();
     } catch (Exception e) {
-      throw new VisitorException (
+      throw new VisitorException(
         "Dynamic schema can only support array of records. Please make sure you have only array of records."
       );
     }
@@ -73,4 +73,7 @@ public class DynamicSchemaValidator extends AbstractSchemaVisitor implements Val
     }
   }
 
+  private Schema getNonNullable(Schema schema) {
+    return schema.isNullable() ? schema.getNonNullable() : schema;
+  }
 }

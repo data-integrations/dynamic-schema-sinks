@@ -110,6 +110,9 @@ public final class SchemaObserver implements Observer<Schema> {
               break;
             }
         }
+        if (exit) {
+          break;
+        }
       } catch (VisitorException e) {
         throw new ObserverException(
           e.getMessage()
