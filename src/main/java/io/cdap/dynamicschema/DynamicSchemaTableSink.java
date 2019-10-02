@@ -29,20 +29,15 @@ import io.cdap.cdap.api.dataset.lib.KeyValue;
 import io.cdap.cdap.api.dataset.table.Put;
 import io.cdap.cdap.api.dataset.table.Table;
 import io.cdap.cdap.etl.api.Emitter;
+import io.cdap.cdap.etl.api.FailureCollector;
 import io.cdap.cdap.etl.api.PipelineConfigurer;
 import io.cdap.cdap.etl.api.batch.BatchRuntimeContext;
 import io.cdap.cdap.etl.api.batch.BatchSink;
 import io.cdap.cdap.etl.api.batch.BatchSinkContext;
 import io.cdap.dynamicschema.api.Expression;
-import io.cdap.dynamicschema.api.ExpressionException;
-import io.cdap.dynamicschema.api.ObserverException;
-import io.cdap.dynamicschema.api.ValidationException;
-import io.cdap.dynamicschema.observer.SchemaObserver;
 import io.cdap.dynamicschema.observer.StructuredRecordObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Dynamic Schema support for writing to Table.
@@ -70,75 +65,28 @@ public class DynamicSchemaTableSink extends BatchSink<StructuredRecord, byte[], 
   @Override
   public void configurePipeline(PipelineConfigurer configurer) {
     super.configurePipeline(configurer);
-    // Get the input schema and validate if there are fields that
-    // support dynamic schema.
-    Schema schema = configurer.getStageConfigurer().getInputSchema();
-
-    try {
-      DynamicSchemaValidator dcv = new DynamicSchemaValidator();
-      SchemaObserver so = new SchemaObserver(dcv);
-      so.traverse(schema);
-      dcv.validate();
-    } catch (ValidationException e) {
-      throw new IllegalArgumentException(e.getMessage());
-    } catch (ObserverException e) {
-      throw new IllegalArgumentException(e.getMessage());
-    }
-
-    // Compile Row Key Expression and make sure it's ok.
-    try {
-      rowKeyExpression = new Expression(config.getRowkey());
-    } catch (ExpressionException e) {
-      throw new IllegalArgumentException("Error in specifying row key " + e.getMessage());
-    }
-
-    // We kow check if all the variables in the expression are present in the input schema
-    // and they are of simple types.
-    List<String> variables = rowKeyExpression.getVariables();
-
-    // If there are no variables, then row key is not correctly formed by the user.
-    if (variables.size() == 0) {
-      throw new IllegalArgumentException(
-        String.format("Please specify a input field name or an expression. You cannot use a constant for row key.")
-      );
-    }
-
-    for (String variable : variables) {
-      Schema.Field field = schema.getField(variable);
-      if (field == null) {
-        throw new IllegalArgumentException(
-          String.format("Row key expression '%s' has variable '%s' that is not present in input field",
-                        config.rowkey, variable)
-        );
-      }
-      if (!field.getSchema().isSimpleOrNullableSimple()) {
-        throw new IllegalArgumentException(
-          String.format("Row key expression '%s' has variable '%s' that is not of type " +
-                          "'string', 'int', 'long', 'float', 'double'", config.rowkey, variable)
-        );
-      }
-    }
-
-    // If the table is not a macro, then create it.
-    if(!config.containsMacro("table")) {
-      configurer.createDataset(config.table, Table.class.getName(), DatasetProperties.builder().build());
-    }
+    Schema inputSchema = configurer.getStageConfigurer().getInputSchema();
+    FailureCollector failureCollector = configurer.getStageConfigurer().getFailureCollector();
+    config.validate(failureCollector, inputSchema);
   }
 
   @Override
   public void prepareRun(BatchSinkContext context) throws DatasetManagementException {
-    if (!context.datasetExists(config.table)) {
-      context.createDataset(config.table, Table.class.getName(), DatasetProperties.builder().build());
-    }
-    context.addOutput(Output.ofDataset(config.table));
-  }
+    Schema inputSchema = context.getInputSchema();
+    FailureCollector failureCollector = context.getFailureCollector();
+    config.validate(failureCollector, inputSchema);
 
+    if (!context.datasetExists(config.getTable())) {
+      context.createDataset(config.getTable(), Table.class.getName(), DatasetProperties.builder().build());
+    }
+    context.addOutput(Output.ofDataset(config.getTable()));
+  }
 
   @Override
   public void initialize(BatchRuntimeContext context) throws Exception {
     super.initialize(context);
     // Row key resolver setup, we know by now that the expression is valid.
-    rowKeyExpression = new Expression(config.rowkey);
+    rowKeyExpression = config.getRowKeyExpression();
   }
 
   @Override
@@ -150,6 +98,6 @@ public class DynamicSchemaTableSink extends BatchSink<StructuredRecord, byte[], 
     sro.traverse(input);
 
     // Visit all the fields and perform necessary operations.
-    emitter.emit(new KeyValue<byte[], Put>(Bytes.toBytes(row), generator.get()));
+    emitter.emit(new KeyValue<>(Bytes.toBytes(row), generator.get()));
   }
 }

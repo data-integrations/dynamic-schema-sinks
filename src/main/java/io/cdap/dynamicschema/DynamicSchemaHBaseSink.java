@@ -26,15 +26,12 @@ import io.cdap.cdap.api.data.format.StructuredRecord;
 import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.cdap.api.dataset.lib.KeyValue;
 import io.cdap.cdap.etl.api.Emitter;
+import io.cdap.cdap.etl.api.FailureCollector;
 import io.cdap.cdap.etl.api.PipelineConfigurer;
 import io.cdap.cdap.etl.api.batch.BatchRuntimeContext;
 import io.cdap.cdap.etl.api.batch.BatchSink;
 import io.cdap.cdap.etl.api.batch.BatchSinkContext;
 import io.cdap.dynamicschema.api.Expression;
-import io.cdap.dynamicschema.api.ExpressionException;
-import io.cdap.dynamicschema.api.ObserverException;
-import io.cdap.dynamicschema.api.ValidationException;
-import io.cdap.dynamicschema.observer.SchemaObserver;
 import io.cdap.dynamicschema.observer.StructuredRecordObserver;
 import io.cdap.plugin.common.ReferenceBatchSink;
 import io.cdap.plugin.common.batch.JobUtils;
@@ -57,7 +54,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,111 +88,17 @@ public class DynamicSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord,
   @Override
   public void configurePipeline(PipelineConfigurer configurer) {
     super.configurePipeline(configurer);
-    // Get the input schema and validate if there are fields that
-    // support dynamic schema.
-    Schema schema = configurer.getStageConfigurer().getInputSchema();
-
-    try {
-      DynamicSchemaValidator dcv = new DynamicSchemaValidator();
-      SchemaObserver so = new SchemaObserver(dcv);
-      so.traverse(schema);
-      dcv.validate();
-    } catch (ValidationException e) {
-      throw new IllegalArgumentException(e.getMessage());
-    } catch (ObserverException e) {
-      throw new IllegalArgumentException(e.getMessage());
-    }
-
-    // Compile Row Key Expression and make sure it's ok.
-    try {
-      rowKeyExpression = new Expression(config.rowkey);
-    } catch (ExpressionException e) {
-      throw new IllegalArgumentException("Error in specifying row key " + e.getMessage());
-    }
-
-    // We kow check if all the variables in the expression are present in the input schema
-    // and they are of simple types.
-    List<String> variables = rowKeyExpression.getVariables();
-    for (String variable : variables) {
-      Schema.Field field = schema.getField(variable);
-      if (field == null) {
-        throw new IllegalArgumentException(
-          String.format("Row key expression '%s' has variable '%s' that is not present in input field",
-                        config.rowkey, variable)
-        );
-      }
-      if (!field.getSchema().isSimpleOrNullableSimple()) {
-        throw new IllegalArgumentException(
-          String.format("Row key expression '%s' has variable '%s' that is not of type " +
-                          "'string', 'int', 'long', 'float', 'double'", config.rowkey, variable)
-        );
-      }
-    }
-
-    // We kow check if all the variables in the expression are present in the input schema
-    // and they are of simple types.
-    variables = rowKeyExpression.getVariables();
-
-    // If there are no variables, then row key is not correctly formed by the user.
-    if (variables.size() == 0) {
-      throw new IllegalArgumentException(
-        String.format("Please specify a input field name or an expression. You cannot use a constant for the row key.")
-      );
-    }
-
-    // Compile Column Family expression and make sure it's ok.
-    // Compile Row Key Expression and make sure it's ok.
-    try {
-      familyExpression = new Expression(config.family);
-    } catch (ExpressionException e) {
-      throw new IllegalArgumentException("Error in specifying column family " + e.getMessage());
-    }
-
-    for (String variable : variables) {
-      Schema.Field field = schema.getField(variable);
-      if (field == null) {
-        throw new IllegalArgumentException(
-          String.format("Column family expression '%s' has variable '%s' that is not present in input field",
-                        config.rowkey, variable)
-        );
-      }
-      if (!field.getSchema().isSimpleOrNullableSimple()) {
-        throw new IllegalArgumentException(
-          String.format("Column family expression '%s' has variable '%s' that is not of type " +
-                          "'string', 'int', 'long', 'float', 'double'", config.rowkey, variable)
-        );
-      }
-    }
-
-    // Check if the table exists on HBase.
-    try {
-      Configuration conf = HBaseConfiguration.create();
-      conf.set(HConstants.ZOOKEEPER_QUORUM, config.qorum);
-      conf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, config.getClientPort());
-      HBaseAdmin admin =  new HBaseAdmin(conf);
-      if(!admin.tableExists(config.table)) {
-        throw new IllegalArgumentException(
-          String.format("HBase table does not exists. Please create table '%s' using hbase shell.", config.table)
-        );
-      }
-    } catch (MasterNotRunningException e) {
-      throw new IllegalArgumentException(
-        String.format("HBase master is not running. Please check the status of HBase.")
-      );
-    } catch (ZooKeeperConnectionException e) {
-      throw new IllegalArgumentException(
-        String.format("Unable to connect with zookeeper, please check zookeeper quorum configuration. %s",
-                      e.getMessage())
-      );
-    } catch (IOException e) {
-      throw new IllegalArgumentException(
-        String.format("Unable to connect to HBase table '%s'", config.table)
-      );
-    }
+    Schema inputSchema = configurer.getStageConfigurer().getInputSchema();
+    FailureCollector failureCollector = configurer.getStageConfigurer().getFailureCollector();
+    validateConfiguration(inputSchema, failureCollector);
   }
 
   @Override
   public void prepareRun(BatchSinkContext context) throws Exception {
+    Schema inputSchema = context.getInputSchema();
+    FailureCollector failureCollector = context.getFailureCollector();
+    validateConfiguration(inputSchema, failureCollector);
+
     Job job;
     ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
     // Switch the context classloader to plugin class' classloader (PluginClassLoader) so that
@@ -214,14 +116,6 @@ public class DynamicSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord,
     Configuration conf = job.getConfiguration();
     HBaseConfiguration.addHbaseResources(conf);
 
-    HBaseAdmin admin =  new HBaseAdmin(conf);
-    if(!admin.tableExists(config.table)) {
-      String msg = String.format("HBase table '%s' does not exists. Please create table '%s' using hbase shell.",
-                                 config.table);
-      LOG.info(msg);
-      throw new IllegalArgumentException(msg);
-    }
-
     context.addOutput(Output.of(config.referenceName, new HBaseOutputFormatProvider(config, conf)));
   }
 
@@ -230,10 +124,10 @@ public class DynamicSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord,
     super.initialize(context);
 
     // Row key resolver setup, we know by now that the expression is valid.
-    rowKeyExpression = new Expression(config.rowkey);
+    rowKeyExpression = config.getRowKeyExpression();
 
     // Column family resolver setup, we know by now that is also valid.
-    familyExpression = new Expression(config.family);
+    familyExpression = config.getFamilyExpression();
   }
 
   @Override
@@ -251,6 +145,42 @@ public class DynamicSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord,
     emitter.emit(new KeyValue<NullWritable, Mutation>(NullWritable.get(), dcs.get()));
   }
 
+  private void validateConfiguration(Schema inputSchema, FailureCollector failureCollector) {
+    // Get the input schema and validate if there are fields that support dynamic schema.
+    config.validate(failureCollector, inputSchema);
+    failureCollector.getOrThrowException();
+    validateTable(failureCollector);
+    failureCollector.getOrThrowException();
+  }
+
+  private void validateTable(FailureCollector failureCollector) {
+    if (config.containsMacro(HBaseSinkConfig.TABLE) || config.containsMacro(HBaseSinkConfig.QUORUM)
+      || config.containsMacro(HBaseSinkConfig.PORT)) {
+      return;
+    }
+    // Check if the table exists on HBase.
+    try {
+      Configuration conf = HBaseConfiguration.create();
+      conf.set(HConstants.ZOOKEEPER_QUORUM, config.getQorum());
+      conf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, config.getClientPort());
+      HBaseAdmin admin = new HBaseAdmin(conf);
+      if (!admin.tableExists(config.getTable())) {
+        failureCollector.addFailure(String.format("HBase table '%s' does not exist", config.getTable()), null)
+          .withConfigProperty(HBaseSinkConfig.TABLE);
+      }
+    } catch (MasterNotRunningException e) {
+      failureCollector.addFailure("HBase master is not running", "Check the status of HBase")
+        .withStacktrace(e.getStackTrace());
+    } catch (ZooKeeperConnectionException e) {
+      failureCollector.addFailure("Unable to connect to zookeeper: " + e.getMessage(),
+                                  "Check zookeeper quorum configuration")
+        .withStacktrace(e.getStackTrace());
+    } catch (IOException e) {
+      failureCollector.addFailure(String.format("Unable to connect to HBase table '%s'", config.getTable()), null)
+        .withStacktrace(e.getStackTrace());
+    }
+  }
+
   /**
    * Provider for HBase Table Output Format.
    */
@@ -259,11 +189,11 @@ public class DynamicSchemaHBaseSink extends ReferenceBatchSink<StructuredRecord,
     private final Map<String, String> conf;
 
     public HBaseOutputFormatProvider(HBaseSinkConfig config, Configuration configuration) {
-      this.conf = new HashMap<String, String>();
+      this.conf = new HashMap<>();
 
-      conf.put(TableOutputFormat.OUTPUT_TABLE, config.table);
+      conf.put(TableOutputFormat.OUTPUT_TABLE, config.getTable());
       conf.put(TableOutputFormat.QUORUM_ADDRESS, config.getQuorum());
-      conf.put(TableOutputFormat.QUORUM_PORT, config.port);
+      conf.put(TableOutputFormat.QUORUM_PORT, String.valueOf(config.getClientPort()));
       String[] serializationClasses = {
         configuration.get("io.serializations"),
         MutationSerialization.class.getName(),
