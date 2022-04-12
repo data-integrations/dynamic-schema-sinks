@@ -29,7 +29,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <cdap.version>6.1.0-SNAPSHOT</cdap.version>
     <avro.version>1.7.7</avro.version>
-    <hadoop.version>2.3.0</hadoop.version>
+    <hadoop.version>3.2.3</hadoop.version>
     <hbase.version>1.1.2</hbase.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <hydrator.version>2.2.0-SNAPSHOT</hydrator.version>
